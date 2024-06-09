@@ -1,0 +1,369 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <link rel="icon" href="student.jpg"type="image/webp">
+    <style>
+      body {
+        background: radial-gradient(#fff,#ffd6d6);
+      }
+      #profilebtn,
+      #logoutbtn {
+        padding: 10px;
+        margin: 10px;
+        margin-top: 20px;
+        border-color: white;
+        color: black;
+      }
+      #profilebtn:hover,
+      #logoutbtn:hover {
+        background-color: transparent;
+        box-shadow: 3px 3px 3px #545959;
+        transition: 0.2s;
+      }
+      .login-card.card.w-75.mb-3.shadow.p-3.mb-5.bg-body-tertiary.rounded {
+        margin: auto;
+        position: relative;
+        top: 2rem;
+        background-color: #f4f4f4;
+        display: none;
+      }
+      .login-card.card.w-75.mb-3.shadow.p-3.mb-5.bg-body-tertiary.rounded.view {
+        display: block;
+      }
+      .status-card.card.mt-2.shadow.p-3.mb-5.bg-body-tertiary.rounded {
+        display: none;
+        position: relative;
+        top: 20px;
+      }
+      .status-card.card.mt-2.shadow.p-3.mb-5.bg-body-tertiary.rounded.view {
+        display: block;
+      }
+      .card.w-75.mb-4.mx-auto.shadow.p-3.mb-5.bg-body-tertiary.rounded {
+        position: relative;
+        top: 30px;
+        display: none;
+      }
+      .card.w-75.mb-4.mx-auto.shadow.p-3.mb-5.bg-body-tertiary.rounded.view {
+        display: block;
+      }
+      .bg {
+        background: rgb(60,27,116);
+        background-color:rosybrown;
+        color: white;
+      }
+      .col-sm-6.mb-3.mb-sm-0{
+      width:25%;
+        height:200px; 
+        background-color:rosybrown;
+        margin-left: 100px;
+        margin-right: 100px;
+        margin-top: 75px;
+        transition: 0.7s;
+        color:black;
+        display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: larger;
+      font-family: Arial, Helvetica, sans-serif;
+      }
+      .col-sm-6.mb-3.mb-sm-0:hover{
+        transform: scale(1.3);
+      }
+      #myChip{
+        font-weight: 600;
+        width:130px;
+        height:50px;
+        border-radius: 10px;
+        text-align: center;
+        /* background-color: rebeccapurple; */
+        }
+        th, td {
+        border: 1px solid black;
+        }
+        </style>
+    <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase.js"></script>
+  </head>
+  <body>
+    <div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
+      <div class="bg p-4">
+        <h5 id="loginusername" class="text-body-emphasis h4">
+          <span
+            ><svg
+              style="position: relative; bottom: 4px; margin-right: 10px"
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="25"
+              fill="currentColor"
+              class="bi bi-person-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+              /></svg></span
+          >20CSA40
+        </h5>
+      </div>
+    </div>
+    <nav class="navbar bg">
+      <div class="container-fluid">
+        <button
+          id="profilebtn"
+          class="navbar-toggler btn-bg"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarToggleExternalContent"
+          aria-controls="navbarToggleExternalContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span>Profile</span>
+        </button>
+        <button id="logoutbtn" class="navbar-toggler" type="button">
+          <span style="font-weight: 400">Logout</span>
+        </button>
+      </div>
+    </nav>
+    <form id="odcontents">
+    <div class=" row" style="justify-content: center; width:97vw">
+        <div class="col-sm-6 mb-3 mb-sm-0" id="requestod">Request OD</div>
+        <div class="col-sm-6 mb-3 mb-sm-0" id="requestleave">Request Leave</div>
+        <div class="col-sm-6 mb-3 mb-sm-0" id="historyod">History of OD</div>
+        <div class="col-sm-6 mb-3 mb-sm-0" id="historyleavepage">History of Leave</div>
+    </div>
+    <div id="reqodpage" style="width:85vw; height:75vh;background-color: rgb(252, 250, 250); position: absolute; top:150px; right:150px; display: none;">
+      <button id="reqclose" style="background-color: red; width:50px; border-radius: 10px; border:none; position: absolute; right: 0px;">x</button>
+      <div class="input-group input-group-lg" style="margin-top: 50px; width:90%; margin-left:50px;">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Student Name</span>
+        <input id="odname" type="text" class="form-control" placeholder="student Name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+      </div>
+      <div class="input-group input-group-lg" style="margin-top: 20px;width:90%; margin-left:50px;">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Roll No</span>
+        <input id="odrollno" type="text" class="form-control" placeholder="Roll No" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+      </div>
+      <div class="input-group mb-4" style="margin-top: 20px;width:90%; margin-left:50px;">
+        <span class="input-group-text">Reason for OD</span>
+        <textarea
+          id="odreason"
+          class="form-control"
+          aria-label="With textarea"
+        ></textarea>
+      </div>
+      <div class="input-group input-group-lg" style="margin-top: 20px; width:90%; margin-left:50px;">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Mentor Name</span>
+        <select id="odmentor" class="form-select" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+            <option selected>Select Mentor</option>
+            <option value="Pavithra">Pavithra</option>
+            <option value="Rekha">Rekha</option>
+            <option value="Navaneetha">Navaneetha</option>
+            <option value="Supriya">Supriya</option>
+            <option value="5">Option 5</option>
+            <option value="6">Option 6</option>
+        </select>
+    </div>
+    <div class="row" style="margin-top: 20px;width:90%; margin-left:40px;">
+        <div class="col">
+          <div class="input-group mb-4" style=" height:50px;">
+            <label class="input-group-text" for="fromdate">From Date:</label>
+            <input id="odfromdate" type="date" class="form-control" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="input-group mb-4" style=" height:50px; margin-left: 20px;">
+            <label class="input-group-text" for="todate">To Date:</label>
+            <input id="odtodate" type="date" class="form-control" />
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 10px;width:90%; margin-left:40px;">
+        <div class="col">
+          <div class="input-group mb-4" style=" height:50px;">
+            <label class="input-group-text" for="studentYear">Year</label>
+            <select class="form-select" id="odyear">
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4td Year</option>
+            </select>
+          </div>
+        </div>
+        <div class="col">
+          <div class="input-group mb-4" style=" height:50px; margin-left: 20px;">
+            <label class="input-group-text" for="studentDept"
+              >Department</label
+            >
+            <select class="form-select" id="oddept">
+              <option value="cse">CSE</option>
+              <option value="it">IT</option>
+              <option value="ece">ECE</option>
+              <option value="aids">AIDS</option>
+              <option value="csbs">CSBS</option>
+              <option value="mech">MECH</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="d-grid col-6 mx-auto">
+        <button id="odsubmit" class="btn btn-primary" type="button">
+          Apply OD
+        </button>
+      </div>
+    </div>
+  </form>
+    <!-- history od od -->
+
+    <div>
+      <div
+        id="history"
+        class="card w-75 mb-4 mx-auto shadow p-3 mb-5 bg-body-tertiary rounded"  style="width:85vw; height:65vh;background-color: rgb(252, 250, 250); position: absolute; top:150px; right:150px; display: none;"
+      >
+      <button id="reqclosehistory" style="background-color: red; width:50px; border-radius: 10px; border:none; position: absolute; right: 0px; top:0px;">x</button>
+
+        <div class="card-body">
+          <table  class="table table-light table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Reason For Od</th>
+                <th scope="col">From-To Date</th>
+                <th scope="col">Mentor Status</th>
+                <th scope="col">HOD Status</th>
+              </tr>
+            </thead>
+            <tbody id="odHistory"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- apply leave -->
+    <!-- <form id="leavecontent"></form> -->
+    <div id="reqleave" style="width:85vw; height:78vh;background-color: rgb(252, 250, 250); position: absolute; top:150px; right:150px; display: none;">
+      <button id="reqclosebtn" style="background-color: red; width:50px; border-radius: 10px; border:none; position: absolute; right: 0px;">x</button>
+      <div class="input-group input-group-lg" style="margin-top: 50px; width:90%; margin-left:50px;">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Student Name</span>
+        <input id="leavename" type="text" class="form-control" placeholder="student Name" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+      </div>
+      <div class="input-group input-group-lg" style="margin-top: 20px;width:90%; margin-left:50px;">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Roll No</span>
+        <input id="leaverollno" type="text" class="form-control" placeholder="Roll No" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+      </div>
+      <div class="input-group mb-4" style="margin-top: 20px;width:90%; margin-left:50px;">
+        <span class="input-group-text">Reason for OD</span>
+        <textarea
+          id="leavereason"
+          class="form-control"
+          aria-label="With textarea"
+        ></textarea>
+      </div>
+      <!-- <div class="input-group mb-3" style="margin-top: 20px;width:90%; margin-left:50px;">
+        <input id="leaveletter" type="file" class="form-control" id="inputGroupFile02">
+        <label id="leaveletterbtn" class="input-group-text" for="inputGroupFile02">Upload</label>
+      </div> -->
+      <div class="input-group mb-3" style="margin-top: 20px;width:90%; margin-left:50px;">
+        <input type="file" id="leaveinp" onchange="getfile(event)" class="form-control"  >
+      <!-- <label for="fileinp"></label> -->
+      <span class=filetext style="display: none;"></span>
+      <button  onclick="uploadimage()" >Upload Doc</button>
+      </div>
+      <input type="text" id="linkletter" value="hii" style="display: none;">
+      <!-- <div id="linkletterdiv"></div> -->
+      
+      <div class="bar" style="display: none;">
+        <div class="progress"></div>
+      </div>
+      <div class="uploadpercentege" style="display: none;">0%</div>
+    <div class="input-group input-group-lg" style=" width:90%; margin-left:50px;">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Mentor Name</span>
+        <select id="leavementor" class="form-select" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+            <option selected>Select Mentor</option>
+            <option value="Pavithra">Pavithra</option>
+            <option value="Rekha">Rekha</option>
+            <option value="Navaneetha">Navaneetha</option>
+            <option value="Supriya">Supriya</option>
+            <option value="5">Option 5</option>
+            <option value="6">Option 6</option>
+        </select>
+    </div>
+    <div class="row" style="margin-top: 20px;width:90%; margin-left:40px;">
+        <div class="col">
+          <div class="input-group mb-4" style=" height:50px;">
+            <label class="input-group-text" for="fromdate">From Date:</label>
+            <input id="leavefrom" type="date" class="form-control" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="input-group mb-4" style=" height:50px; margin-left: 20px;">
+            <label class="input-group-text" for="todate">To Date:</label>
+            <input id="leaveto" type="date" class="form-control" />
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 10px;width:90%; margin-left:40px;">
+        <div class="col">
+          <div class="input-group mb-4" style=" height:50px;">
+            <label class="input-group-text" for="studentYear">Year</label>
+            <select class="form-select" id="leaveyear">
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4td Year</option>
+            </select>
+          </div>
+        </div>
+        <div class="col">
+          <div class="input-group mb-4" style=" height:50px; margin-left: 20px;">
+            <label class="input-group-text" for="studentDept"
+              >Department</label
+            >
+            <select class="form-select" id="leavedept">
+              <option value="cse">CSE</option>
+              <option value="it">IT</option>
+              <option value="ece">ECE</option>
+              <option value="aids">AIDS</option>
+              <option value="csbs">CSBS</option>
+              <option value="mech">MECH</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="d-grid col-6 mx-auto">
+        <button id="leavesubmit" class="btn btn-primary" type="button">
+          Apply Leave
+        </button>
+      </div>
+    </div>
+    <!-- history od leave -->
+    <div>
+      <div
+        id="historyleave"
+        class="card w-75 mb-4 mx-auto shadow p-3 mb-5 bg-body-tertiary rounded"  style="width:85vw; height:65vh;background-color: rgb(252, 250, 250); position: absolute; top:150px; right:150px; display: none;"
+      >
+      <button id="reqclosehistoryleave" style="background-color: red; width:50px; border-radius: 10px; border:none; position: absolute; right: 0px; top:0px;">x</button>
+      <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Reason For leave</th>
+                <th scope="col">From-To Date</th>
+                <th scope="col">Mentor Status</th>
+                <th scope="col">HOD Status</th>
+              </tr>
+            </thead>
+            <tbody id="leavehistory"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<!-- <script src=""https://www.gstatic.com/firebasejs/10.7.2/firebase.js""></script> -->
+<script src="./leaveletter.js"></script>
+<script type="module" src="./student.js"></script>
+</body>
+</html>
